@@ -10,10 +10,8 @@ Cloud Monitored RAG is a secure, observable Retrieval-Augmented Generation (RAG)
 - A Streamlit application for chat, retrieval inspection, guardrail testing, and telemetry.
 - FastAPI gateway and internal agent service suitable for Cloud Run deployment.
 
-The project is useful as a reference architecture and local validation environment for monitored RAG systems. It is not a replacement for a production security review, data-governance review, or cost-control policy.
-
-> **Current status:** The local RAG workflow has been tested end-to-end with Weaviate Cloud, local PDF ingestion, hybrid retrieval, Vertex AI generation, Phoenix traces, and Streamlit. Google Cloud Run deployment and public-repository publication are deployment steps that still need to be completed.
-
+> **Current status:** The local RAG workflow has been tested end-to-end with Weaviate Cloud, local PDF ingestion, hybrid retrieval, Vertex AI generation, Phoenix traces, and Streamlit.
+> 
 ## Features
 
 ### PDF ingestion
@@ -432,7 +430,3 @@ Before pushing or publishing updates:
 - Review `git diff --cached` for secrets.
 - Add evaluation screenshots without credentials or personal data.
 - Add the Phoenix evidence and test results.
-
-## License and document ownership
-
-Only publish PDFs, screenshots, code, and evaluation data that you own or have permission to redistribute. The local handbook PDF is intentionally excluded from this repository.
