@@ -1,0 +1,13 @@
+ C4Context
+ title Cloud Monitored RAG - System Context
+ Person(user, "Employee / Client", "Asks an authorized enterprise question")
+ System(rag, "Cloud Monitored RAG", "Guarded, grounded, observable RAG service")
+ System_Ext(identity, "Enterprise Identity", "Caller identity and authorization")
+ System_Ext(docs, "Authorized Document Source", "PDF knowledge base")
+ System_Ext(model, "Approved Model Endpoint", "Vertex AI in cloud mode")
+ System_Ext(phoenix, "Arize Phoenix", "Local or hosted trace dashboard")
+ Rel(user, rag, "Submits question")
+ Rel(rag, identity, "Validates caller / policy")
+ Rel(docs, rag, "Provides authorized documents")
+ Rel(rag, model, "Sends approved grounded prompt")
+ Rel(rag, phoenix, "Exports OpenTelemetry spans")

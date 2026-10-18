@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import asyncio
+import logging
 import os
 
 from Observability_Traces_Phoenix import rag_span
@@ -13,19 +14,28 @@ from rag_pipeline import (
     sanitize_user_query,
 )
 
+logger = logging.getLogger(__name__)
+
 
 def ask_rag(prompt: str) -> dict[str, object]:
     """Run guardrail, hybrid retrieval, grounded generation, and telemetry."""
     with rag_span("rag.run", query_length=len(prompt)) as span:
         guardrail = sanitize_user_query(prompt)
+        logger.info(
+            "stage=guardrails accepted=%s markers=%s",
+            guardrail.accepted,
+            ",".join(guardrail.matched_markers) or "none",
+        )
         if not guardrail.accepted:
             return {"answer": guardrail.reason, "guardrail": guardrail, "results": []}
         results = hybrid_search(guardrail.sanitized_query)
+        logger.info("stage=vector_store result_count=%d", len(results))
         score = retrieval_hit_rate(results)
         if span is not None:
             span.set_attribute("retrieval.hit_rate", score)
             span.set_attribute("retrieval.result_count", len(results))
         answer = generate_grounded_answer(guardrail.sanitized_query, results)
+        logger.info("stage=generation status=complete")
         return {"answer": answer, "guardrail": guardrail, "results": results, "hit_rate": score}
 
 

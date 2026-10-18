@@ -4,12 +4,14 @@ from __future__ import annotations
 
 import os
 import re
+import hashlib
 from dataclasses import dataclass
 from functools import lru_cache
 from importlib import import_module
 from importlib.util import find_spec
 from pathlib import Path
 from typing import Any
+from urllib.parse import urlparse
 
 if find_spec("dotenv") is not None:
     import_module("dotenv").load_dotenv()
@@ -29,6 +31,7 @@ INJECTION_PATTERNS: tuple[tuple[str, str], ...] = (
 class Settings:
     weaviate_url: str
     weaviate_api_key: str
+    weaviate_grpc_port: int
     gcp_project: str
     gcp_location: str
     vertex_model: str
@@ -50,6 +53,7 @@ def get_settings() -> Settings:
     return Settings(
         weaviate_url=os.environ.get("WEAVIATE_URL", "").strip(),
         weaviate_api_key=os.environ.get("WEAVIATE_API_KEY", "").strip(),
+        weaviate_grpc_port=int(os.environ.get("WEAVIATE_GRPC_PORT", "50051")),
         gcp_project=os.environ.get("GOOGLE_CLOUD_PROJECT", os.environ.get("GCP_PROJECT", "")),
         gcp_location=os.environ.get("GOOGLE_CLOUD_LOCATION", "us-central1").strip(),
         vertex_model=os.environ.get("VERTEX_MODEL", "gemini-2.5-flash"),
@@ -104,6 +108,23 @@ def extract_pdf_text(path: Path) -> str:
 
 @lru_cache(maxsize=2)
 def build_embedding_model(model_name: str):
+    if os.getenv("LOCAL_EMBEDDINGS", "").lower() in {"1", "true", "yes"}:
+        class LocalEmbeddingModel:
+            class EmbeddingVector(list[float]):
+                def tolist(self) -> list[float]:
+                    return list(self)
+
+            def encode(self, value: str, normalize_embeddings: bool = True) -> EmbeddingVector:
+                vector = [
+                    ((int.from_bytes(hashlib.sha256(f"{value}:{index}".encode()).digest()[:4], "big") / 2**32) * 2) - 1
+                    for index in range(384)
+                ]
+                if normalize_embeddings:
+                    magnitude = sum(item * item for item in vector) ** 0.5 or 1.0
+                    vector = [item / magnitude for item in vector]
+                return self.EmbeddingVector(vector)
+
+        return LocalEmbeddingModel()
     try:
         from sentence_transformers import SentenceTransformer
     except ImportError as exc:
@@ -112,33 +133,51 @@ def build_embedding_model(model_name: str):
 
 
 def connect_weaviate(settings: Settings):
-    if not settings.weaviate_url or not settings.weaviate_api_key:
-        raise RuntimeError("WEAVIATE_URL and WEAVIATE_API_KEY must be set.")
+    if not settings.weaviate_url:
+        raise RuntimeError("WEAVIATE_URL must be set.")
     try:
         import weaviate
         from weaviate.classes.config import Configure, DataType, Property
         from weaviate.classes.init import Auth
     except ImportError as exc:
         raise RuntimeError("Install weaviate-client with `pip install -r requirements.txt`.") from exc
-    client = weaviate.connect_to_weaviate_cloud(
-        cluster_url=settings.weaviate_url,
-        auth_credentials=Auth.api_key(settings.weaviate_api_key),
-    )
+    parsed_url = urlparse(settings.weaviate_url)
+    if parsed_url.hostname in {"localhost", "127.0.0.1", "weaviate"}:
+        client = weaviate.connect_to_local(
+            host=parsed_url.hostname,
+            port=parsed_url.port or 8080,
+            grpc_port=settings.weaviate_grpc_port,
+        )
+    else:
+        if not settings.weaviate_api_key:
+            raise RuntimeError(
+                "WEAVIATE_API_KEY must be set when WEAVIATE_URL points to Weaviate Cloud."
+            )
+        client = weaviate.connect_to_weaviate_cloud(
+            cluster_url=settings.weaviate_url,
+            auth_credentials=Auth.api_key(settings.weaviate_api_key),
+        )
     try:
         if not client.is_ready():
             raise ConnectionError("Weaviate is not ready.")
         if not client.collections.exists(COLLECTION_NAME):
             # New Weaviate Cloud clusters may enforce HFresh and reject the
             # legacy HNSW default used by older Python clients.
-            if not hasattr(Configure.VectorIndex, "hfresh"):
+            is_local = parsed_url.hostname in {"localhost", "127.0.0.1", "weaviate"}
+            if not is_local and not hasattr(Configure.VectorIndex, "hfresh"):
                 raise RuntimeError(
                     "This Weaviate client does not support the cluster's HFresh index. "
                     "Upgrade with: python -m pip install --upgrade 'weaviate-client>=4.23.1'"
                 )
+            vector_index = (
+                Configure.VectorIndex.hnsw()
+                if is_local
+                else Configure.VectorIndex.hfresh()
+            )
             client.collections.create(
                 name=COLLECTION_NAME,
                 vector_config=Configure.Vectors.self_provided(
-                    vector_index_config=Configure.VectorIndex.hfresh()
+                    vector_index_config=vector_index
                 ),
                 properties=[
                     Property(name="text", data_type=DataType.TEXT),
@@ -250,12 +289,19 @@ def generate_grounded_answer(query: str, results: list[dict[str, Any]]) -> str:
         f"[Source {index}: {item['source']} | chunk {item['chunk_id']}]\n{item['text']}"
         for index, item in enumerate(results, start=1)
     )
+    settings = get_settings()
+    if os.getenv("LOCAL_GENERATION", "").lower() in {"1", "true", "yes"}:
+        source = str(results[0]["source"])
+        excerpt = str(results[0]["text"]).strip()
+        return (
+            f"Based on the retrieved handbook passage, {excerpt} "
+            f"[Source: {source}]"
+        )
     try:
         import vertexai
         from vertexai.generative_models import GenerativeModel
     except ImportError as exc:
         raise RuntimeError("Install google-cloud-aiplatform with `pip install -r requirements.txt`.") from exc
-    settings = get_settings()
     if not settings.gcp_project:
         raise RuntimeError("GOOGLE_CLOUD_PROJECT must be set for Vertex AI generation.")
     vertexai.init(project=settings.gcp_project, location=settings.gcp_location)

@@ -1,37 +1,58 @@
-"""Cloud Run HTTP API for the guarded RAG flow."""
+"""FastAPI gateway for the guarded Cloud Monitored RAG flow."""
 
 from __future__ import annotations
 
-from flask import Flask, jsonify, request
+import logging
+import os
+import uuid
 
-from RAG_Agent_VertexAI_GoogleADK import ask_rag
+import httpx
+from fastapi import FastAPI, HTTPException, Request
+from fastapi.responses import JSONResponse
+from pydantic import BaseModel
 
-app = Flask(__name__)
+from Observability_Traces_Phoenix import rag_span
+
+logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
+logger = logging.getLogger(__name__)
+app = FastAPI(title="Cloud Monitored RAG API Gateway", version="1.0")
+AGENT_URL = os.getenv("AGENT_SERVICE_URL", "http://localhost:8081").rstrip("/")
+
+
+class QueryRequest(BaseModel):
+    prompt: str
 
 
 @app.get("/health")
-def health():
-    return jsonify({"status": "ok"})
+def health() -> dict[str, str]:
+    return {"status": "ok", "service": "api-gateway"}
 
 
 @app.post("/query")
-def query():
-    payload = request.get_json(silent=True)
-    if not isinstance(payload, dict) or not isinstance(payload.get("prompt"), str):
-        return jsonify({"error": "JSON body must contain a string field named 'prompt'"}), 400
-    result = ask_rag(payload["prompt"])
-    guardrail = result["guardrail"]
-    return jsonify(
-        {
-            "answer": result["answer"],
-            "accepted": guardrail.accepted,
-            "matched_markers": list(guardrail.matched_markers),
-            "reason": guardrail.reason,
-            "results": result["results"],
-            "hit_rate": result.get("hit_rate", 0.0),
-        }
-    ), (200 if guardrail.accepted else 422)
-
-
-if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=8080)
+async def query(payload: QueryRequest, request: Request) -> JSONResponse:
+    request_id = request.headers.get("x-request-id", str(uuid.uuid4()))
+    logger.info("stage=api_gateway request_id=%s", request_id)
+    with rag_span("api.gateway", request_id=request_id, route="/query"):
+        try:
+            async with httpx.AsyncClient(timeout=180.0) as client:
+                response = await client.post(
+                    f"{AGENT_URL}/internal/query",
+                    json={"prompt": payload.prompt},
+                    headers={"x-request-id": request_id},
+                )
+        except httpx.HTTPError as exc:
+            logger.exception("stage=api_gateway request_id=%s status=error", request_id)
+            raise HTTPException(status_code=502, detail="Agent service is unavailable.") from exc
+    if response.status_code >= 500:
+        raise HTTPException(status_code=502, detail=response.text)
+    body = response.json()
+    body["request_id"] = request_id
+    body["flow"] = [
+        "client",
+        "api_gateway",
+        "guardrails",
+        "agent_logic",
+        "vector_store",
+        "telemetry",
+    ]
+    return JSONResponse(status_code=200 if body["accepted"] else 422, content=body)

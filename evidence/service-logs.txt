@@ -1,0 +1,92 @@
+api-gateway-1  | INFO:     Started server process [1]
+api-gateway-1  | INFO:     Waiting for application startup.
+api-gateway-1  | INFO:     Application startup complete.
+api-gateway-1  | INFO:     Uvicorn running on http://0.0.0.0:8080 (Press CTRL+C to quit)
+api-gateway-1  | INFO:     127.0.0.1:47004 - "GET /health HTTP/1.1" 200 OK
+api-gateway-1  | INFO:     172.19.0.1:57998 - "GET /health HTTP/1.1" 200 OK
+api-gateway-1  | 2026-10-18 21:58:16,830 INFO stage=api_gateway request_id=e116f7ec-ddb9-4bce-9999-92d4cd5a336e
+api-gateway-1  | 2026-10-18 21:58:18,337 INFO HTTP Request: POST http://agent-service:8081/internal/query "HTTP/1.1 200 OK"
+api-gateway-1  | INFO:     172.19.0.1:57998 - "POST /query HTTP/1.1" 200 OK
+api-gateway-1  | INFO:     127.0.0.1:42972 - "GET /health HTTP/1.1" 200 OK
+api-gateway-1  | INFO:     172.19.0.1:52036 - "GET /health HTTP/1.1" 200 OK
+api-gateway-1  | INFO:     127.0.0.1:57210 - "GET /health HTTP/1.1" 200 OK
+api-gateway-1  | INFO:     127.0.0.1:42820 - "GET /health HTTP/1.1" 200 OK
+api-gateway-1  | INFO:     127.0.0.1:57432 - "GET /health HTTP/1.1" 200 OK
+api-gateway-1  | INFO:     127.0.0.1:52640 - "GET /health HTTP/1.1" 200 OK
+api-gateway-1  | INFO:     127.0.0.1:37278 - "GET /health HTTP/1.1" 200 OK
+api-gateway-1  | INFO:     127.0.0.1:35752 - "GET /health HTTP/1.1" 200 OK
+api-gateway-1  | INFO:     127.0.0.1:35994 - "GET /health HTTP/1.1" 200 OK
+api-gateway-1  | INFO:     127.0.0.1:42008 - "GET /health HTTP/1.1" 200 OK
+api-gateway-1  | 2026-10-18 21:59:45,758 INFO stage=api_gateway request_id=299211bb-30ca-4220-8324-33a45b61173b
+api-gateway-1  | 2026-10-18 21:59:46,068 INFO HTTP Request: POST http://agent-service:8081/internal/query "HTTP/1.1 200 OK"
+api-gateway-1  | INFO:     172.19.0.1:39876 - "POST /query HTTP/1.1" 200 OK
+api-gateway-1  | 2026-10-18 21:59:46,471 INFO stage=api_gateway request_id=d7bbe4f3-ecee-43a2-8096-b26dc6b6549a
+api-gateway-1  | 2026-10-18 21:59:46,492 INFO HTTP Request: POST http://agent-service:8081/internal/query "HTTP/1.1 200 OK"
+api-gateway-1  | INFO:     172.19.0.1:39876 - "POST /query HTTP/1.1" 422 Unprocessable Entity
+api-gateway-1  | INFO:     127.0.0.1:36164 - "GET /health HTTP/1.1" 200 OK
+api-gateway-1  | INFO:     127.0.0.1:43028 - "GET /health HTTP/1.1" 200 OK
+api-gateway-1  | INFO:     127.0.0.1:58004 - "GET /health HTTP/1.1" 200 OK
+api-gateway-1  | INFO:     127.0.0.1:47562 - "GET /health HTTP/1.1" 200 OK
+api-gateway-1  | INFO:     127.0.0.1:41674 - "GET /health HTTP/1.1" 200 OK
+api-gateway-1  | INFO:     127.0.0.1:42042 - "GET /health HTTP/1.1" 200 OK
+api-gateway-1  | INFO:     127.0.0.1:35854 - "GET /health HTTP/1.1" 200 OK
+api-gateway-1  | INFO:     127.0.0.1:41648 - "GET /health HTTP/1.1" 200 OK
+api-gateway-1  | INFO:     127.0.0.1:45018 - "GET /health HTTP/1.1" 200 OK
+api-gateway-1  | INFO:     127.0.0.1:43086 - "GET /health HTTP/1.1" 200 OK
+api-gateway-1  | INFO:     127.0.0.1:36004 - "GET /health HTTP/1.1" 200 OK
+api-gateway-1  | INFO:     172.19.0.1:40998 - "GET /health HTTP/1.1" 200 OK
+api-gateway-1  | 2026-10-18 22:01:38,804 INFO stage=api_gateway request_id=366603f8-dad9-4d9a-920b-e812aeb755a0
+api-gateway-1  | 2026-10-18 22:01:39,959 INFO HTTP Request: POST http://agent-service:8081/internal/query "HTTP/1.1 200 OK"
+api-gateway-1  | INFO:     172.19.0.1:40998 - "POST /query HTTP/1.1" 200 OK
+api-gateway-1  | 2026-10-18 22:01:40,683 INFO stage=api_gateway request_id=7fa68ebb-895d-4e08-8da0-8b7033837ed3
+api-gateway-1  | 2026-10-18 22:01:40,697 INFO HTTP Request: POST http://agent-service:8081/internal/query "HTTP/1.1 200 OK"
+api-gateway-1  | INFO:     172.19.0.1:40998 - "POST /query HTTP/1.1" 422 Unprocessable Entity
+api-gateway-1  | INFO:     127.0.0.1:42212 - "GET /health HTTP/1.1" 200 OK
+api-gateway-1  | INFO:     127.0.0.1:58228 - "GET /health HTTP/1.1" 200 OK
+api-gateway-1  | INFO:     127.0.0.1:43922 - "GET /health HTTP/1.1" 200 OK
+api-gateway-1  | INFO:     127.0.0.1:38092 - "GET /health HTTP/1.1" 200 OK
+api-gateway-1  | INFO:     127.0.0.1:35530 - "GET /health HTTP/1.1" 200 OK
+api-gateway-1  | INFO:     127.0.0.1:60856 - "GET /health HTTP/1.1" 200 OK
+api-gateway-1  | INFO:     127.0.0.1:42290 - "GET /health HTTP/1.1" 200 OK
+api-gateway-1    | INFO:     172.19.0.1:47480 - "GET /health HTTP/1.1" 200 OK
+api-gateway-1    | 2026-10-18 22:02:58,933 INFO stage=api_gateway request_id=8219f3d4-d004-47eb-87b8-a7bbdfb7dd30
+api-gateway-1    | 2026-10-18 22:02:59,129 INFO HTTP Request: POST http://agent-service:8081/internal/query "HTTP/1.1 200 OK"
+api-gateway-1    | INFO:     172.19.0.1:47480 - "POST /query HTTP/1.1" 200 OK
+agent-service-1  | INFO:     Started server process [1]
+agent-service-1  | INFO:     Waiting for application startup.
+agent-service-1  | INFO:     Application startup complete.
+agent-service-1  | INFO:     Uvicorn running on http://0.0.0.0:8081 (Press CTRL+C to quit)
+agent-service-1  | INFO:     127.0.0.1:34566 - "GET /health HTTP/1.1" 200 OK
+agent-service-1  | 2026-10-18 22:01:38,817 INFO stage=agent_logic request_id=366603f8-dad9-4d9a-920b-e812aeb755a0
+agent-service-1  | 2026-10-18 22:01:38,986 INFO stage=guardrails accepted=True markers=none
+agent-service-1  | /usr/local/lib/python3.11/site-packages/authlib/integrations/httpx_client/assertion_client.py:5: AuthlibDeprecationWarning: The httpx module is deprecated; please use httpx2 instead.
+agent-service-1  |   from ._compat import httpx2
+agent-service-1  | 2026-10-18 22:01:39,760 INFO HTTP Request: GET http://weaviate:8080/v1/.well-known/openid-configuration "HTTP/1.1 404 Not Found"
+agent-service-1  | 2026-10-18 22:01:39,776 INFO HTTP Request: GET http://weaviate:8080/v1/meta "HTTP/1.1 200 OK"
+agent-service-1  | 2026-10-18 22:01:39,912 INFO HTTP Request: GET https://pypi.org/pypi/weaviate-client/json "HTTP/1.1 200 OK"
+agent-service-1  | 2026-10-18 22:01:39,944 INFO HTTP Request: GET http://weaviate:8080/v1/.well-known/ready "HTTP/1.1 200 OK"
+agent-service-1  | 2026-10-18 22:01:39,947 INFO HTTP Request: GET http://weaviate:8080/v1/schema/KnowledgeChunk "HTTP/1.1 200 OK"
+agent-service-1  | 2026-10-18 22:01:39,956 INFO stage=vector_store result_count=5
+agent-service-1  | 2026-10-18 22:01:39,956 INFO stage=generation status=complete
+agent-service-1  | INFO:     172.19.0.5:45834 - "POST /internal/query HTTP/1.1" 200 OK
+agent-service-1  | INFO:     127.0.0.1:51652 - "GET /health HTTP/1.1" 200 OK
+agent-service-1  | 2026-10-18 22:01:40,694 INFO stage=agent_logic request_id=7fa68ebb-895d-4e08-8da0-8b7033837ed3
+agent-service-1  | 2026-10-18 22:01:40,695 INFO stage=guardrails accepted=False markers=ignore previous instructions
+agent-service-1  | INFO:     172.19.0.5:45848 - "POST /internal/query HTTP/1.1" 200 OK
+agent-service-1  | INFO:     127.0.0.1:32862 - "GET /health HTTP/1.1" 200 OK
+agent-service-1  | INFO:     127.0.0.1:55088 - "GET /health HTTP/1.1" 200 OK
+agent-service-1  | INFO:     127.0.0.1:59080 - "GET /health HTTP/1.1" 200 OK
+agent-service-1  | INFO:     127.0.0.1:57526 - "GET /health HTTP/1.1" 200 OK
+agent-service-1  | INFO:     127.0.0.1:43774 - "GET /health HTTP/1.1" 200 OK
+agent-service-1  | INFO:     127.0.0.1:54994 - "GET /health HTTP/1.1" 200 OK
+agent-service-1  | INFO:     127.0.0.1:51324 - "GET /health HTTP/1.1" 200 OK
+agent-service-1  | 2026-10-18 22:02:58,952 INFO stage=agent_logic request_id=8219f3d4-d004-47eb-87b8-a7bbdfb7dd30
+agent-service-1  | 2026-10-18 22:02:58,952 INFO stage=guardrails accepted=True markers=none
+agent-service-1  | 2026-10-18 22:02:58,963 INFO HTTP Request: GET http://weaviate:8080/v1/.well-known/openid-configuration "HTTP/1.1 404 Not Found"
+agent-service-1  | 2026-10-18 22:02:58,970 INFO HTTP Request: GET http://weaviate:8080/v1/meta "HTTP/1.1 200 OK"
+agent-service-1  | 2026-10-18 22:02:59,071 INFO HTTP Request: GET https://pypi.org/pypi/weaviate-client/json "HTTP/1.1 200 OK"
+agent-service-1  | 2026-10-18 22:02:59,106 INFO HTTP Request: GET http://weaviate:8080/v1/.well-known/ready "HTTP/1.1 200 OK"
+agent-service-1  | 2026-10-18 22:02:59,111 INFO HTTP Request: GET http://weaviate:8080/v1/schema/KnowledgeChunk "HTTP/1.1 200 OK"
+agent-service-1  | 2026-10-18 22:02:59,124 INFO stage=vector_store result_count=5
+agent-service-1  | 2026-10-18 22:02:59,124 INFO stage=generation status=complete
+agent-service-1  | INFO:     172.19.0.5:42054 - "POST /internal/query HTTP/1.1" 200 OK

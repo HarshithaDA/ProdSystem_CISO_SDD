@@ -1,0 +1,108 @@
+name: cloud-monitored-rag
+
+services:
+  api-gateway:
+    build:
+      context: .
+      dockerfile: Dockerfile.api
+    environment:
+      AGENT_SERVICE_URL: http://agent-service:8081
+      PHOENIX_OTEL_ENDPOINT: http://phoenix:6006/v1/traces
+      PHOENIX_PROJECT_NAME: cloud-monitored-rag
+      PHOENIX_SERVICE_NAME: api-gateway
+    ports:
+      - "8088:8080"
+    depends_on:
+      agent-service:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8080/health')"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+
+  agent-service:
+    build:
+      context: .
+      dockerfile: Dockerfile.agent
+    environment:
+      LOCAL_GENERATION: "true"
+      LOCAL_EMBEDDINGS: "true"
+      WEAVIATE_URL: http://weaviate:8080
+      WEAVIATE_GRPC_PORT: "50051"
+      WEAVIATE_COLLECTION: KnowledgeChunk
+      EMBEDDING_MODEL: sentence-transformers/all-MiniLM-L6-v2
+      TOP_K: "5"
+      PHOENIX_OTEL_ENDPOINT: http://phoenix:6006/v1/traces
+      PHOENIX_PROJECT_NAME: cloud-monitored-rag
+      PHOENIX_SERVICE_NAME: agent-service
+    expose:
+      - "8081"
+    depends_on:
+      weaviate:
+        condition: service_healthy
+      phoenix:
+        condition: service_started
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8081/health')"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+
+  ingestion-service:
+    build:
+      context: .
+      dockerfile: Dockerfile.ingestion
+    environment:
+      WEAVIATE_URL: http://weaviate:8080
+      WEAVIATE_GRPC_PORT: "50051"
+      WEAVIATE_COLLECTION: KnowledgeChunk
+      EMBEDDING_MODEL: sentence-transformers/all-MiniLM-L6-v2
+      LOCAL_EMBEDDINGS: "true"
+    volumes:
+      - ./docs:/data/docs:ro
+    ports:
+      - "8082:8080"
+    depends_on:
+      weaviate:
+        condition: service_healthy
+    profiles: ["tools"]
+
+  weaviate:
+    image: semitechnologies/weaviate:1.30.5
+    restart: unless-stopped
+    environment:
+      QUERY_DEFAULTS_LIMIT: "25"
+      AUTHENTICATION_ANONYMOUS_ACCESS_ENABLED: "true"
+      PERSISTENCE_DATA_PATH: /var/lib/weaviate
+      DEFAULT_VECTORIZER_MODULE: none
+      ENABLE_MODULES: ""
+      CLUSTER_HOSTNAME: node1
+    ports:
+      - "8083:8080"
+      - "50051:50051"
+    volumes:
+      - weaviate_data:/var/lib/weaviate
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:8080/v1/.well-known/ready"]
+      interval: 10s
+      timeout: 5s
+      retries: 20
+
+  phoenix:
+    build:
+      context: .
+      dockerfile: Dockerfile.phoenix
+    restart: unless-stopped
+    environment:
+      PHOENIX_HOST: 0.0.0.0
+      PHOENIX_PORT: "6006"
+      PHOENIX_WORKING_DIR: /data
+    ports:
+      - "6006:6006"
+    volumes:
+      - phoenix_data:/data
+
+volumes:
+  weaviate_data:
+  phoenix_data:

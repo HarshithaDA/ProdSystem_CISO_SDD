@@ -1,0 +1,22 @@
+ C4Component
+ title Agent Service - Component Diagram
+ Container_Boundary(agent, "Agent Service") {
+   Component(endpoint, "Query Endpoint", "agent_service.query", "Validates request and returns controlled response")
+   Component(guardrail, "Guardrail Policy", "sanitize_user_query", "Rejects injection, empty, and oversized input")
+   Component(orchestrator, "RAG Orchestrator", "ask_rag", "Coordinates guardrails, retrieval, and generation")
+   Component(retriever, "Hybrid Retriever", "hybrid_search", "Embeds query and queries Weaviate")
+   Component(generator, "Grounded Generator", "generate_grounded_answer", "Cites retrieved sources; local fallback for evidence")
+   Component(tracer, "Telemetry Helper", "rag_span", "Creates OpenTelemetry spans and attributes")
+ }
+ ContainerDb(vector, "Vector Store", "Weaviate")
+ System_Ext(model, "Vertex AI", "Cloud generation endpoint")
+ System_Ext(phoenix, "Phoenix", "OTLP collector/dashboard")
+ Rel(endpoint, guardrail, "passes prompt")
+ Rel(guardrail, orchestrator, "accepted query")
+ Rel(orchestrator, retriever, "retrieve context")
+ Rel(retriever, vector, "hybrid query")
+ Rel(orchestrator, generator, "ground answer")
+ Rel(generator, model, "optional cloud generation")
+ Rel(endpoint, tracer, "request span")
+ Rel(orchestrator, tracer, "RAG spans")
+ Rel(tracer, phoenix, "exports spans")

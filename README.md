@@ -8,7 +8,7 @@ Cloud Monitored RAG is a secure, observable Retrieval-Augmented Generation (RAG)
 - Retrieval-quality signals, latency instrumentation, and token telemetry.
 - Local Phoenix observability for development and evidence capture.
 - A Streamlit application for chat, retrieval inspection, guardrail testing, and telemetry.
-- Flask APIs suitable for Cloud Run deployment.
+- FastAPI gateway and internal agent service suitable for Cloud Run deployment.
 
 The project is useful as a reference architecture and local validation environment for monitored RAG systems. It is not a replacement for a production security review, data-governance review, or cost-control policy.
 
@@ -52,7 +52,7 @@ The shared `sanitize_user_query()` wrapper runs before retrieval and generation.
 - Empty queries.
 - Queries longer than 4,000 characters.
 
-Rejected queries return the reason and matched markers. The same function is used by the direct agent, Flask API, Streamlit chat tab, and guardrail test tab.
+Rejected queries return the reason and matched markers. The same function is used by the direct agent, FastAPI agent service, Streamlit chat tab, and guardrail test tab.
 
 Retrieved PDF text is passed as untrusted context. Instructions inside documents are not treated as application instructions.
 
@@ -95,7 +95,7 @@ The Streamlit interface includes:
 - Telemetry tab showing Phoenix status, project, and trace instructions.
 - Sidebar onboarding documentation and current configuration.
 
-The Flask API includes:
+The FastAPI gateway includes:
 
 - `GET /health`
 - `POST /query`
@@ -103,6 +103,24 @@ The Flask API includes:
 - Guardrail status and matched markers.
 - Retrieved results and hit-rate output.
 - HTTP `422` for rejected prompt-injection queries.
+
+## Phase-4 local compose stack
+
+The master [`docker-compose.yml`](docker-compose.yml) runs the FastAPI API Gateway on
+`http://localhost:8088` (container port 8080), the internal Agent Service, local Weaviate on the compose
+network, and Arize Phoenix at `http://localhost:6006`. It enables deterministic local
+grounded responses with `LOCAL_GENERATION=true`; cloud Vertex AI behavior is unchanged
+outside compose.
+
+```powershell
+docker compose up --build -d weaviate phoenix
+docker compose run --rm ingestion-service python -c "from pathlib import Path; from ingestion_weaviate import ingest_directory; print(ingest_directory(Path('/data/docs')))"
+docker compose up --build -d agent-service api-gateway
+.\scripts\e2e_verify.ps1
+```
+
+The CISO SDD and Mermaid C4 diagrams are in [`architecture/`](architecture/), and the
+evidence capture procedure is in [`evidence/README.md`](evidence/README.md).
 
 ```mermaid
 flowchart LR

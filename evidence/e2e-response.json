@@ -1,0 +1,55 @@
+{
+    "request_id":  "8219f3d4-d004-47eb-87b8-a7bbdfb7dd30",
+    "answer":  "Based on the retrieved handbook passage, ), even if he or she does not actually benefit from the disclosure of such information. I understand the above policy and pledge not to disclose confidential information. Signature: Print Name: Date: Please sign and return to the Manager of Finance and Administration {ORGANIZATION NAME} Employee Handbook ¬©2004 National Council of Nonprofit Associations May be duplicated, with attribution, by charitable organizations. iii {ORGANIZATION NAME} EMPLOYEE HANDBOOK TABLE OF CONTENTS PAGE I. MISSION ........................................................................................................................ ............. X II. OVERVIEW....................................................................................................................... .......... X III. VOLUNTARY AT‚?êWIL [Source: Employee Handbook - National Council of Nonprofits.pdf]",
+    "accepted":  true,
+    "matched_markers":  [
+
+                        ],
+    "reason":  "Query accepted.",
+    "results":  [
+                    {
+                        "text":  "), even if he or she does not actually benefit from the disclosure of such information. I understand the above policy and pledge not to disclose confidential information. Signature: Print Name: Date: Please sign and return to the Manager of Finance and Administration {ORGANIZATION NAME} Employee Handbook ¬©2004 National Council of Nonprofit Associations May be duplicated, with attribution, by charitable organizations. iii {ORGANIZATION NAME} EMPLOYEE HANDBOOK TABLE OF CONTENTS PAGE I. MISSION ........................................................................................................................ ............. X II. OVERVIEW....................................................................................................................... .......... X III. VOLUNTARY AT‚?êWIL",
+                        "source":  "Employee Handbook - National Council of Nonprofits.pdf",
+                        "chunk_id":  3,
+                        "score":  0.7878398895263672,
+                        "distance":  null
+                    },
+                    {
+                        "text":  "ny information that an employee learns about {ORGANIZATION NAME}, or its members or donors, as a result of working for {ORGANIZATION NAME} that is not otherwise publicly available constitutes confidential information. Employees may not disclose confidential information to anyone who is not employed by {ORGANIZATION NAME} or to other persons employed by {ORGANIZATION NAME} who do not need to know such information to assist in rendering services. The disclosure, distribution, electronic transmission or copying of {ORGANIZATION NAME}‚??s confidential information is prohibited. Any employee who discloses confidential {ORGANIZATION NAME} information will be subject to disciplinary action (including possible separation), even if he or she does not actually benefit from the disclosure of such infor",
+                        "source":  "Employee Handbook - National Council of Nonprofits.pdf",
+                        "chunk_id":  2,
+                        "score":  0.6994534730911255,
+                        "distance":  null
+                    },
+                    {
+                        "text":  "‚?êtime employees. No sick leave benefits are paid upon separation of employment from {ORGANIZATION NAME} for any reason. If an employee πs illness or injury requires a consecutive absence of five (5) days or more, physician documentation will be required. {ORGANIZATION NAME} also may recommend that the employee apply for state disability insurance (SDI). If the employee receives SDI and the compensation does not equal the employee πs sick leave accruals, {ORGANIZATION NAME} will make up the difference until all sick leave benefits are used. 12 D. Personal Leave {ORGANIZATION NAME} provides three (3) days of personal leave per calendar year to all Full‚?êTime and Part‚?êTime employees who have completed six months of employment. Personal leave benefits are prorated accordingly for part‚?êtime employ",
+                        "source":  "Employee Handbook - National Council of Nonprofits.pdf",
+                        "chunk_id":  49,
+                        "score":  0.677936315536499,
+                        "distance":  null
+                    },
+                    {
+                        "text":  "........................................................ X XI. ECONOMIC BENEFITS AND INSURANCE ....................................................................... X A. Health/Life Insurance ....................................................................................................... X B. Social Security/Medicare/Medicaid ................................................................................ X C. Workers π Compensation and Unemployment Insurance ............................................ X D. Retirement Plan ................................................................................................................. X E. Tax Deferred Annuity Plan.............................................................................................. X XII. LEAVE BENEFITS A",
+                        "source":  "Employee Handbook - National Council of Nonprofits.pdf",
+                        "chunk_id":  6,
+                        "score":  0.6652788519859314,
+                        "distance":  null
+                    },
+                    {
+                        "text":  "Social Security, Medicare and Medicaid programs. Employees‚?? contributions are deducted from each paycheck and {ORGANIZATION NAME} contributes at the applicable wage base as established by federal law. C. Workers π Compensation and Unemployment Insurance Employees are covered for benefits under the Workers π Compensation Law. Absences for which worker compensation benefits are provided are not charged against the eligible employee πs sick leave. To assure proper protection for employees and {ORGANIZATION NAME}, any accident that occurs on the job must be reported, even if there are no injuries apparent at the time. Forms for this purpose are available from {ORGANIZATION NAME}. {ORGANIZATION NAME} also participates in the District of Columbia unemployment program. D. Retirement Plan {ORGANIZATI",
+                        "source":  "Employee Handbook - National Council of Nonprofits.pdf",
+                        "chunk_id":  42,
+                        "score":  0.6555742621421814,
+                        "distance":  null
+                    }
+                ],
+    "hit_rate":  1.0,
+    "flow":  [
+                 "client",
+                 "api_gateway",
+                 "guardrails",
+                 "agent_logic",
+                 "vector_store",
+                 "telemetry"
+             ]
+}

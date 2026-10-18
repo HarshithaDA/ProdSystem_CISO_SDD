@@ -1,0 +1,5 @@
+NAME                                  IMAGE                               COMMAND                  SERVICE         CREATED              STATUS                        PORTS
+cloud-monitored-rag-agent-service-1   cloud-monitored-rag-agent-service   "uvicorn agent_servi…"   agent-service   About a minute ago   Up About a minute (healthy)   8081/tcp
+cloud-monitored-rag-api-gateway-1     cloud-monitored-rag-api-gateway     "uvicorn api:app --h…"   api-gateway     5 minutes ago        Up 5 minutes (healthy)        0.0.0.0:8088->8080/tcp, [::]:8088->8080/tcp
+cloud-monitored-rag-phoenix-1         cloud-monitored-rag-phoenix         "python Server_Phoen…"   phoenix         4 hours ago          Up 29 minutes                 0.0.0.0:6006->6006/tcp, [::]:6006->6006/tcp
+cloud-monitored-rag-weaviate-1        semitechnologies/weaviate:1.30.5    "/bin/weaviate --hos…"   weaviate        4 hours ago          Up 29 minutes (healthy)       0.0.0.0:50051->50051/tcp, [::]:50051->50051/tcp, 0.0.0.0:8083->8080/tcp, [::]:8083->8080/tcp

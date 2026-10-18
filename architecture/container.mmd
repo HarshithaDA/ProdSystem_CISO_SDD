@@ -1,0 +1,20 @@
+ C4Container
+ title Cloud Monitored RAG - Container Diagram
+ Person(client, "Client", "Employee or application")
+ System_Boundary(rag, "Cloud Monitored RAG") {
+   Container(gateway, "API Gateway", "FastAPI", "Public /query boundary, schema validation, request IDs")
+   Container(agent, "Agent Service", "FastAPI", "Guardrails, orchestration, grounded answer")
+   Container(ingest, "Ingestion Service", "Flask", "Operator-only PDF extraction and upsert")
+   ContainerDb(vector, "Vector Store", "Weaviate", "Hybrid dense + BM25 KnowledgeChunk collection")
+   Container(telemetry, "Telemetry", "OpenTelemetry", "Span export from every controlled stage")
+ }
+ System_Ext(phoenix, "Arize Phoenix", "Trace dashboard")
+ System_Ext(model, "Vertex AI", "Approved cloud model; disabled in local evidence mode")
+ Rel(client, gateway, "POST /query", "JSON/HTTPS")
+ Rel(gateway, agent, "Internal query", "HTTP")
+ Rel(agent, vector, "Hybrid retrieval", "gRPC/HTTP")
+ Rel(ingest, vector, "Chunk and upsert", "gRPC/HTTP")
+ Rel(agent, model, "Grounded generation", "HTTPS")
+ Rel(gateway, telemetry, "Gateway spans", "OTLP")
+ Rel(agent, telemetry, "Agent/RAG spans", "OTLP")
+ Rel(telemetry, phoenix, "Export traces", "OTLP/HTTP")

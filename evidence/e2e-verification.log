@@ -1,0 +1,5 @@
+timestamp=2026-10-18T22:02:58.8821878Z
+health={"status":"ok","service":"api-gateway"}
+http_status=200
+latency_ms=252.55
+flow=client -> api_gateway -> guardrails -> agent_logic -> vector_store -> telemetry
